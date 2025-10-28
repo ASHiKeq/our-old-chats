@@ -780,20 +780,29 @@
         }
     });
 
-    // চ্যাট লোড হওয়ার পর স্ক্রল নিচে নিয়ে যাওয়া
-        // ##################################################################
-    // ###  নিচে থেকে স্ক্রল শুরু করার জন্য এই অংশটি ব্যবহার করুন!  ###
     // ##################################################################
-    
-    // সমস্ত মেসেজ লোড হওয়ার পরে 100 মিলিসেকেন্ড অপেক্ষা করা হলো, যাতে ব্রাউজার সঠিক উচ্চতা গণনা করতে পারে।
+    // ### নিচে থেকে স্ক্রল করার জন্য চূড়ান্ত সমাধান ###
+    // ##################################################################
+     chatContainer.scrollTop = chatContainer.scrollHeight;
+    // নিশ্চিত করতে যে সকল মেসেজ সম্পূর্ণরূপে লোড হয়েছে (DOM এবং CSS সহ), 
+    // window 'load' ইভেন্টের জন্য অপেক্ষা করা হলো।
+    window.addEventListener('load', () => {
+        const chatContainer = document.getElementById('chat-container');
+        if (chatContainer) {
+            // chatContainer এর স্ক্রোল পজিশনকে তার সর্বোচ্চ উচ্চতায় (অর্থাৎ নিচে) সেট করা হলো।
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+    });
+
+    // একটি ফেইলসেফ (failsafe) হিসেবে setTimeout ও রাখা হলো, যদি 'load' ইভেন্ট কাজ না করে
     setTimeout(() => {
          const chatContainer = document.getElementById('chat-container');
          if (chatContainer) {
-             // chatContainer এর স্ক্রোল পজিশনকে তার সর্বোচ্চ উচ্চতায় (অর্থাৎ নিচে) সেট করা হলো।
              chatContainer.scrollTop = chatContainer.scrollHeight;
          }
-    }, 100);
-    chatContainer.scrollTop = chatContainer.scrollHeight;
+    }, 500); // 500 মিলিসেকেন্ড অপেক্ষা করা হলো
+    
+    // ##################################################################
 </script>
 </body>
 </html>
