@@ -779,30 +779,28 @@
             chatContainer.appendChild(messageLine); // লাইনকে চ্যাট কন্টেইনারে যোগ করা
         }
     });
-
-    // ##################################################################
-    // ### নিচে থেকে স্ক্রল করার জন্য চূড়ান্ত সমাধান ###
-    // ##################################################################
-     chatContainer.scrollTop = chatContainer.scrollHeight;
-    // নিশ্চিত করতে যে সকল মেসেজ সম্পূর্ণরূপে লোড হয়েছে (DOM এবং CSS সহ), 
-    // window 'load' ইভেন্টের জন্য অপেক্ষা করা হলো।
-    window.addEventListener('load', () => {
+// নিচের দিকে যাওয়ার জন্য এটী
+    // একটি ফাংশন যা চ্যাট কন্টেইনার অথবা বডি/HTML - উভয়কেই নিচে নিয়ে যাবে।
+    function scrollToBottom() {
         const chatContainer = document.getElementById('chat-container');
+        
+        // 1. চ্যাট কন্টেইনারকে স্ক্রল করার চেষ্টা
         if (chatContainer) {
-            // chatContainer এর স্ক্রোল পজিশনকে তার সর্বোচ্চ উচ্চতায় (অর্থাৎ নিচে) সেট করা হলো।
+            // কন্টেইনারের স্ক্রল পজিশনকে তার সর্বোচ্চ উচ্চতায় সেট করা হলো।
             chatContainer.scrollTop = chatContainer.scrollHeight;
         }
-    });
+        
+        // 2. ফেইলসেফ: যদি পুরো ব্রাউজার উইন্ডো স্ক্রল করে, তবে HTML/BODY কে নিচে নিয়ে যাওয়া
+        window.scrollTo(0, document.body.scrollHeight || document.documentElement.scrollHeight);
+    }
 
-    // একটি ফেইলসেফ (failsafe) হিসেবে setTimeout ও রাখা হলো, যদি 'load' ইভেন্ট কাজ না করে
-    setTimeout(() => {
-         const chatContainer = document.getElementById('chat-container');
-         if (chatContainer) {
-             chatContainer.scrollTop = chatContainer.scrollHeight;
-         }
-    }, 500); // 500 মিলিসেকেন্ড অপেক্ষা করা হলো
+    // A. সমস্ত সম্পদ (ছবি, CSS) লোড হওয়ার পরে ফাংশনটি চালানো
+    window.addEventListener('load', scrollToBottom);
+
+    // B. DOM লোডিং এবং রেন্ডারিং নিশ্চিত করতে একটি ফেইলসেফ হিসেবে setTimeout
+    setTimeout(scrollToBottom, 500); 
     
     // ##################################################################
-</script>
+</script> 
 </body>
 </html>
